@@ -44,6 +44,16 @@ def additional_processing(lst: set[str]) -> list[str]:
     return list(set(processed))
 
 
+def removing_unnecessary(lst: set[str]) -> list[str]:
+    lst = list(lst)
+    for i, val in enumerate(lst):
+        lst[i] = lst[i].lower()
+        sp = val.split("(")
+        if len(sp) > 1:
+            lst[i] = sp[0].strip().lower()
+    return lst
+
+
 def get_synonyms(word: str) -> list[str]:
     """Функция для поиска синонимов слова через WordNet"""
     synonyms = set()
@@ -57,7 +67,7 @@ def get_synonyms(word: str) -> list[str]:
     for synset in synsets:
         synonyms.add(synset.title)  # Добавляем синонимы
 
-    return additional_processing(synonyms)
+    return removing_unnecessary(synonyms)
 
 
 def getting_a_response() -> list[str]:
@@ -78,13 +88,19 @@ def getting_a_response() -> list[str]:
 
 def compare_answers(user_answers: list[str]) -> list[bool | int]:
     results = []
-    for i, user_answer in enumerate(user_answers):
+
+    for i, user in enumerate(user_answers):
+
         correct_word = data_answ[i].lower()
+
         correct_synonyms = get_synonyms(correct_word)
-        if user_answer.lower() == correct_word or user_answer.lower() in correct_synonyms:
+
+        if user.lower() == correct_word or user.lower() in correct_synonyms:
             results.append(True)
+
         else:
             results.append(i)
+
     return results
 
 
