@@ -45,13 +45,13 @@ def additional_processing(lst: set[str]) -> list[str]:
 
 
 def removing_unnecessary(lst: set[str]) -> list[str]:
-    lst = list(lst)
-    for i, val in enumerate(lst):
-        lst[i] = lst[i].lower()
+    ret = list(lst)
+    for i, val in enumerate(ret):
+        ret[i] = ret[i].lower()
         sp = val.split("(")
         if len(sp) > 1:
-            lst[i] = sp[0].strip().lower()
-    return lst
+            ret[i] = sp[0].strip().lower()
+    return ret
 
 
 def get_synonyms(word: str) -> list[str]:
@@ -59,7 +59,7 @@ def get_synonyms(word: str) -> list[str]:
     synonyms = set()
 
     # Приводим слово к начальной форме (лемматизация)
-    lemma = morph.parse(word)[0].normal_form
+    lemma = morph.parse(word)[0].normal_form # type: ignore
 
     # Ищем в RuWordNet синонимы для данного слова
     synsets = ruwordnet.get_synsets(lemma)
