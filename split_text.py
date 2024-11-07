@@ -1,13 +1,19 @@
 import re
+import sys
 from typing import Generator
 
 
 ENDING_MARKS = '.!?"'
-PUNCTUATION_MARKS = ',()[]{}-:;' + ENDING_MARKS
-MIN_LINE_LEN = 50
-MIN_SENTENCE_LEN = 5
-FILE_NAME = 'texts/war-n-piece.txt'
-OUTPUT_NAME = 'texts/sents_war_n_piece.txt'
+PUNCTUATION_MARKS = ',()[]{}-:;@#$&*' + ENDING_MARKS
+REPLACE = {
+    '…': '...',
+    '«': '"',
+    '»': '"',
+    '–': '-'
+}
+
+MIN_LINE_LEN = 20
+MIN_SENTENCE_WORDS = 3
 
 
 def split_line(line: str) -> list[str]:
@@ -22,17 +28,22 @@ def split_to_sentences(tokens: list[str]) -> Generator[list[str], None, None]:
         return s[0].isupper()
 
     last_i = 0
+    i = 0
 
     prev = ""
+    prev2 = ""
     before_dot = ""
 
     for i in range(1, len(tokens)):
-        before_dot = prev
+        prev2 = prev
         prev = tokens[i-1]
         curr = tokens[i]
 
         if prev not in ENDING_MARKS:
             continue
+
+        if prev2 not in PUNCTUATION_MARKS:
+            before_dot = prev2
 
         if len(before_dot) <= 1: # probably is name
             continue
@@ -40,11 +51,12 @@ def split_to_sentences(tokens: list[str]) -> Generator[list[str], None, None]:
         if not starts_with_cap(curr):
             continue
         
-        sentence = tokens[last_i:i]
-        if len(sentence) >= MIN_SENTENCE_LEN:
-            yield sentence
+        yield tokens[last_i:i]
 
         last_i = i
+
+    if last_i != i and tokens[i] in ENDING_MARKS:
+        yield tokens[last_i:]
 
 
 def parse_sentences(text: str) -> Generator[list[str], None, None]:
@@ -57,18 +69,21 @@ def parse_sentences(text: str) -> Generator[list[str], None, None]:
 
 
 def main():
-    with open(FILE_NAME, 'r') as file:
+    filename = sys.argv[1]
+
+    with open(filename, 'r') as file:
         text = file.read()
 
-    text = text.replace('…', '...')\
-               .replace('«', '"')  \
-               .replace('»', '"')  \
-               .replace('–', '-')
+    for i in REPLACE:
+        text = text.replace(i, REPLACE[i])
 
     sentences = parse_sentences(text)
     
-    with open(OUTPUT_NAME, 'w') as file:
+    with open(filename + '.sents', 'w') as file:
         for i in sentences:
+            if len([j for j in i if len(j) >= 2]) < MIN_SENTENCE_WORDS:
+                continue
+
             file.write(f'{" ".join(i)}\n')
 
 if __name__ == '__main__':
