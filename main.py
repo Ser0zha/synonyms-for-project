@@ -59,14 +59,14 @@ def get_synonyms(word: str) -> list[str]:
     synonyms = set()
 
     # Приводим слово к начальной форме (лемматизация)
-    lemma = morph.parse(word)[0].normal_form # type: ignore
+    lemma = morph.parse(word)[0].normal_form  # type: ignore
 
     # Ищем в RuWordNet синонимы для данного слова
     synsets = ruwordnet.get_synsets(lemma)
 
     for synset in synsets:
         synonyms.add(synset.title)  # Добавляем синонимы
-
+    print(synonyms)
     return removing_unnecessary(synonyms)
 
 

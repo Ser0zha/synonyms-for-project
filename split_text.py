@@ -86,5 +86,6 @@ def main():
 
             file.write(f'{" ".join(i)}\n')
 
+
 if __name__ == '__main__':
     main()
