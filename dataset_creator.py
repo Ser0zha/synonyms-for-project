@@ -26,15 +26,6 @@ def write_json(data):
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def add_entry(data: list, id: int, text: str, answer: str, is_correct: bool):
-    data.append({
-        'id': id,
-        'text': text,
-        'answer': answer,
-        'correct': is_correct
-    })
-
-
 def random_word_choice(sentence: str) -> tuple[str, str, bool] | None:
     tokens = sentence.split()
     idx_to_select = [i for i, v in enumerate(tokens) if len(v) >= MIN_WORD_LEN and v.isalpha() and v.islower()] # really need is lower?
@@ -61,8 +52,13 @@ def generate_data() -> list:
             if not (res := random_word_choice(sentence)):
                 continue
 
-            new_text, answer, is_correct = res
-            add_entry(data, id_factory.next(), new_text, answer, is_correct)
+            new_text, word, is_correct = res
+            data.append({
+                'id': id_factory.next(),
+                'text': new_text,
+                'word': word,
+                'correct': is_correct
+            })
 
     return data
 
