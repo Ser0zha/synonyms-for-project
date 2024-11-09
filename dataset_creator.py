@@ -14,6 +14,7 @@ MIN_WORD_LEN = 3
 RD_INFLECTION_ATTEMPTS = 5
 RD_FORM_VARIANTS = 2
 RD_WORD_VARIANTS = 2
+RD_SENTENCE_VARIANTS = 5
 
 morph = pymorphy2.MorphAnalyzer()
 
@@ -165,7 +166,7 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
 def generate_sentence_variants(sentence: str) -> set[tuple[str, str]]:
     ret = set()
     
-    for _ in range(5):
+    for _ in range(RD_SENTENCE_VARIANTS):
         if not (res := random_word_choice(sentence)):
             return ret
         ret.add(res)
