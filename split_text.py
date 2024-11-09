@@ -4,7 +4,7 @@ from typing import Generator
 
 
 ENDING_MARKS = '.!?"'
-PUNCTUATION_MARKS = ',()[]{}-:;@#$&*' + ENDING_MARKS
+PUNCTUATION_MARKS = ',()[]{}-:;@#$&*\'' + ENDING_MARKS
 REPLACE = {
     '…': '...',
     '«': '"',
