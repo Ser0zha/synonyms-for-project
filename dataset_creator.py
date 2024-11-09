@@ -2,14 +2,13 @@ import json
 import os
 from random import choice
 from typing import Generic, TypeVar
-import pymorphy2
 
+import pymorphy2
 
 PATH_RD_WORDS = 'additional_word/words.txt'
 PATH_JSON = "datasets/data_ru_lang1.json"
 PATH_TEXTS = "./texts/"
 MIN_WORD_LEN = 3
-
 
 RD_INFLECTION_ATTEMPTS = 5
 RD_FORM_VARIANTS = 2
@@ -29,6 +28,8 @@ class IdFactory:
 
 
 _T = TypeVar('_T')
+
+
 class RandomChoicer(Generic[_T]):
     def __init__(self, choices: list[_T] | tuple[_T]) -> None:
         self.choices = choices
@@ -50,7 +51,7 @@ def write_json(data):
 def random_inflection(parsed_normal: pymorphy2.analyzer.Parse) -> set[str] | None:
     inflect_with = set()
 
-    if 'NOUN' in parsed_normal.tag: 
+    if 'NOUN' in parsed_normal.tag:
         inflect_with.add(choice((
             'nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'
         )))
@@ -63,9 +64,9 @@ def random_inflection(parsed_normal: pymorphy2.analyzer.Parse) -> set[str] | Non
         inflect_with.add(choice((
             'indc', 'impr'
         )))
-        #inflect_with.add(choice((
+        # inflect_with.add(choice((
         #    'perf', 'impf'
-        #)))
+        # )))
         inflect_with.add(choice((
             'pres', 'past', 'futr'
         )))
@@ -92,7 +93,7 @@ def random_inflection(parsed_normal: pymorphy2.analyzer.Parse) -> set[str] | Non
         if 'sing' in inflect_with:
             inflect_with.add(choice((
                 'masc', 'femn', 'neut'
-            )))    
+            )))
         return inflect_with
 
     if 'ADJS' in parsed_normal.tag:
@@ -108,19 +109,20 @@ def random_inflection(parsed_normal: pymorphy2.analyzer.Parse) -> set[str] | Non
 
 
 def random_word_form(word: str) -> str:
-    parsed = morph.parse(word)[0].normalized # type: ignore
+    parsed = morph.parse(word)[0].normalized  # type: ignore
 
-    for _ in range(RD_INFLECTION_ATTEMPTS): # attempts to inflect
-        inflection = random_inflection(parsed) # type: ignore
+    for _ in range(RD_INFLECTION_ATTEMPTS):  # attempts to inflect
+        inflection = random_inflection(parsed)  # type: ignore
         if not inflection:
             return word
 
-        inflected = parsed.inflect(inflection) #type: ignore
+        inflected = parsed.inflect(inflection)  # type: ignore
         if inflected:
             return inflected[0]
 
     print(f'Cannot inflect in {RD_INFLECTION_ATTEMPTS} attempts', word)
     return word
+
 
 def random_word_choice(sentence: str) -> tuple[str, str] | None:
     tokens = sentence.split()
@@ -137,12 +139,13 @@ def random_word_choice(sentence: str) -> tuple[str, str] | None:
     return " ".join(tokens), word
 
 
-def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[str], data: list, sentence: str, word: str):
+def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[str], data: list, sentence: str,
+                           word: str):
     data.append({
         'id': id_factory.next(),
         'text': sentence,
         'word': word,
-        'correct': True
+        'correct': 1.0
     })
 
     for _ in range(RD_FORM_VARIANTS):
@@ -150,8 +153,8 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
             data.append({
                 'id': id_factory.next(),
                 'text': sentence,
-                'word': rd_form,
-                'correct': False
+                'word': rd_form.strip(),
+                'correct': 0.0
             })
 
     for _ in range(RD_WORD_VARIANTS):
@@ -159,13 +162,14 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
             data.append({
                 'id': id_factory.next(),
                 'text': sentence,
-                'word': rd_word,
-                'correct': False
+                'word': rd_word.strip(),
+                'correct': 0.0
             })
+
 
 def generate_sentence_variants(sentence: str) -> set[tuple[str, str]]:
     ret = set()
-    
+
     for _ in range(RD_SENTENCE_VARIANTS):
         if not (res := random_word_choice(sentence)):
             return ret
