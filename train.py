@@ -8,6 +8,11 @@ MODEL_NAME = "ai-forever/rut5-base"
 DATASET_PATH = "datasets/data_ru_lang.dataset"
 
 
+# Before train: run data_json_creator.py
+#               & dataset_tokenizer.py
+# To create train data
+
+
 def main():
     model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME)
 
