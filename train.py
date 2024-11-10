@@ -25,7 +25,7 @@ def main():
 
     training_args = TrainingArguments(
         output_dir=CHECKPOINT_PATH,
-        per_device_train_batch_size=128,  # Подбирайте в зависимости от памяти GPU
+        per_device_train_batch_size=12,  # Подбирайте в зависимости от памяти GPU
         gradient_accumulation_steps=2,
         num_train_epochs=3,
         logging_dir=LOG_PATH,
