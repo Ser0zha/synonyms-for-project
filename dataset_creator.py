@@ -5,9 +5,9 @@ from typing import Generic, TypeVar
 
 import pymorphy2
 
-PATH_RD_WORDS = 'additional_word/words.txt'
-PATH_JSON = "datasets/data_ru_lang1.json"
-PATH_TEXTS = "./texts/"
+PATH_RD_WORDS = 'additional_word/russian.txt'
+PATH_JSON = 'datasets/data_ru_lang1.json'
+PATH_TEXTS = './texts/'
 MIN_WORD_LEN = 3
 
 RD_INFLECTION_ATTEMPTS = 5
@@ -44,7 +44,7 @@ def read_lines(path: str):
 
 
 def write_json(data):
-    with open(PATH_JSON, "w+", encoding="utf-8") as file:
+    with open(PATH_JSON, 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
@@ -134,7 +134,7 @@ def random_word_choice(sentence: str) -> tuple[str, str] | None:
 
     index = choice(idx_to_select)
     word = tokens[index]
-    tokens[index] = "WORD"
+    tokens[index] = 'WORD'
 
     return " ".join(tokens), word
 
@@ -158,7 +158,7 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
             })
 
     for _ in range(RD_WORD_VARIANTS):
-        if (rd_word := random_word_form(random_words.get())) != word:
+        if (rd_word := random_words.get()) != word:
             data.append({
                 'id': id_factory.next(),
                 'text': sentence,
