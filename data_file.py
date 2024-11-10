@@ -1,12 +1,11 @@
 import json
 
-PATH_JSON_CORPUS = 'datasets/data_ru_lang1.json'
+PATH_JSON_DATASET = 'datasets/data_ru_lang.json'
 
 
 def open_json():
-    with open(PATH_JSON_CORPUS, "r", encoding="UTF-8") as read_file:
-        data_rus = json.load(read_file)
-    return data_rus
+    with open(PATH_JSON_DATASET, "r", encoding="UTF-8") as read_file:
+        return json.load(read_file)
 
 
 # def file_splitting(fil, mode="text"):

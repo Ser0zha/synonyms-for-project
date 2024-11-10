@@ -4,16 +4,15 @@ from transformers import TrainingArguments, Trainer
 from data_file import open_json
 from datasets import Dataset
 
-model_name = "ai-forever/rut5-base"
-model = T5ForConditionalGeneration.from_pretrained(model_name)
-tokenizer = T5Tokenizer.from_pretrained(model_name)
+
+MODEL_NAME = "ai-forever/rut5-base"
 
 
 def preprocess_data(data):
     text = data["text"].repalce("WORD", "<extra_id_0>")
     target = data["word"]
-    input_text = f"Заполни пропуск: {text}"
-    target_text = f"{target}" if data["correct"] == 1.0 else ""  # Пустая строка для неверных вариантов
+    input_text = f'IS IT CORRECT TO PUT WORD "{target}" INTO SENTENCE: {text}'
+    target_text = 'yes' if data["correct"] > 0 else 'no'
 
     dict_data = {
         "input_text": input_text,
@@ -22,7 +21,7 @@ def preprocess_data(data):
     return dict_data
 
 
-def tokenize_of_data(batch):
+def tokenize_of_data(tokenizer, batch):
     inputs = tokenizer(batch["input_text"], max_length=512, truncation=True, padding="max_length")
     labels = tokenizer(batch["target_text"], max_length=10, truncation=True, padding="max_length")
     batch["input_ids"] = inputs.input_ids
@@ -32,10 +31,13 @@ def tokenize_of_data(batch):
 
 
 def main():
+    model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME)
+    tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)
+
     data_set = Dataset.from_file(open_json())
     data_set = data_set.map(preprocess_data)
 
-    tokenized_dataset = data_set.map(tokenize_of_data, batched=True)
+    tokenized_dataset = data_set.map(lambda i: tokenize_of_data(tokenizer, i), batched=True)
 
     training_args = TrainingArguments(
         output_dir="./results",
