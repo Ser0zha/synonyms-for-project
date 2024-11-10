@@ -9,7 +9,7 @@ OUTPUT_PATH = "datasets/data_ru_lang.dataset"
 
 
 def load_dataset() -> Dataset:
-    with open(DATASET_PATH, 'r') as file:
+    with open(DATASET_PATH, 'r', encoding='utf8') as file:
         data = json.load(file)
     
     return Dataset.from_list([
@@ -23,7 +23,7 @@ def load_dataset() -> Dataset:
 
 def tokenized(data: Dataset, tokenizer) -> Dataset:
     def f(batch):
-        inputs = tokenizer(batch['input'], max_length=512, truncation=True, padding='max_length', return_tensors='pt')
+        inputs = tokenizer(batch['input'], max_length=128, truncation=True, padding='max_length', return_tensors='pt')
         labels = tokenizer(batch['target'], max_length=16, truncation=True, padding='max_length', return_tensors='pt')
         return {
             'input_ids': inputs.input_ids,
