@@ -6,7 +6,7 @@ from typing import Generic, TypeVar
 import pymorphy2
 
 PATH_RD_WORDS = 'additional_word/russian.txt'
-PATH_JSON = 'datasets/data_ru_lang1.json'
+PATH_JSON = 'datasets/data_ru_lang.json'
 PATH_TEXTS = './texts/'
 MIN_WORD_LEN = 3
 
@@ -145,7 +145,7 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
         'id': id_factory.next(),
         'text': sentence,
         'word': word,
-        'correct': 1.0
+        'correct': True
     })
 
     for _ in range(RD_FORM_VARIANTS):
@@ -154,7 +154,7 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
                 'id': id_factory.next(),
                 'text': sentence,
                 'word': rd_form.strip(),
-                'correct': 0.0
+                'correct': False
             })
 
     for _ in range(RD_WORD_VARIANTS):
@@ -163,7 +163,7 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
                 'id': id_factory.next(),
                 'text': sentence,
                 'word': rd_word.strip(),
-                'correct': 0.0
+                'correct': False
             })
 
 
