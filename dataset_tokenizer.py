@@ -14,8 +14,8 @@ def load_dataset() -> Dataset:
     
     return Dataset.from_list([
         {
-            'input': 'IS IT CORRECT TO PUT WORD "{i["word"]}" INTO SENTENCE: {i["text"].replace("WORD", "<extra_id_0>")}', 
-            'target': 'yes' if i['correct'] else 'no'
+            'input': 'WORD: "{i["word"]}", SENTENCE: {i["text"].replace("WORD", "<extra_id_0>")}', 
+            'target': i['answer']
         }
         for i in data
     ])

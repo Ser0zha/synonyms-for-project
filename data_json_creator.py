@@ -11,8 +11,8 @@ PATH_TEXTS = './texts/'
 MIN_WORD_LEN = 3
 
 RD_INFLECTION_ATTEMPTS = 5
-RD_FORM_VARIANTS = 1
-RD_WORD_VARIANTS = 0
+RD_FORM_VARIANTS = 2
+RD_WORD_VARIANTS = 2
 RD_SENTENCE_VARIANTS = 5
 
 morph = pymorphy2.MorphAnalyzer()
@@ -145,7 +145,7 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
         'id': id_factory.next(),
         'text': sentence,
         'word': word,
-        'correct': True
+        'answer': word
     })
 
     for _ in range(RD_FORM_VARIANTS):
@@ -154,7 +154,7 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
                 'id': id_factory.next(),
                 'text': sentence,
                 'word': rd_form.strip(),
-                'correct': False
+                'answer': word
             })
 
     for _ in range(RD_WORD_VARIANTS):
@@ -163,7 +163,7 @@ def generate_word_variants(id_factory: IdFactory, random_words: RandomChoicer[st
                 'id': id_factory.next(),
                 'text': sentence,
                 'word': rd_word.strip(),
-                'correct': False
+                'answer': word
             })
 
 
