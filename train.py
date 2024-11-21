@@ -27,6 +27,7 @@ def main():
         gradient_accumulation_steps=4,
         num_train_epochs=17,
         save_total_limit=2,
+        save_steps=250,
         fp16=True,  # Включить, если используете GPU NVIDIA
     )
 
