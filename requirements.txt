@@ -1,0 +1,7 @@
+transformers~=4.46.2
+datasets~=3.1.0
+pymorphy2~=0.9.1
+matplotlib~=3.9.2
+torch~=2.0.1+cu117
+evaluate~=0.4.3
+emoji~=2.14.0
